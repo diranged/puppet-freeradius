@@ -1,15 +1,16 @@
 # Base class to install FreeRADIUS
 class freeradius (
-  $control_socket  = false,
-  $max_servers     = '4096',
-  $max_requests    = '4096',
-  $mysql_support   = false,
-  $perl_support    = false,
-  $utils_support   = false,
-  $ldap_support    = false,
-  $wpa_supplicant  = false,
-  $winbind_support = false,
-  $syslog          = false,
+  $control_socket   = false,
+  $max_servers      = '4096',
+  $max_requests     = '4096',
+  $manage_logrotate = true,
+  $mysql_support    = false,
+  $perl_support     = false,
+  $utils_support    = false,
+  $ldap_support     = false,
+  $wpa_supplicant   = false,
+  $winbind_support  = false,
+  $syslog           = false,
 ) inherits freeradius::params {
 
   file { 'radiusd.conf':
@@ -195,12 +196,14 @@ class freeradius (
   }
 
   # Updated logrotate file to include radiusd-*.log
-  file { '/etc/logrotate.d/radiusd':
-    mode    => '0640',
-    owner   => 'root',
-    group   => $freeradius::fr_group,
-    content => template('freeradius/radiusd.logrotate.erb'),
-    require => [Package[$freeradius::fr_package], Group[$freeradius::fr_group]],
+  if $manage_logrotate == true {
+    file { '/etc/logrotate.d/radiusd':
+      mode    => '0640',
+      owner   => 'root',
+      group   => $freeradius::fr_group,
+      content => template('freeradius/radiusd.logrotate.erb'),
+      require => [Package[$freeradius::fr_package], Group[$freeradius::fr_group]],
+    }
   }
 
   # Generate global SSL parameters

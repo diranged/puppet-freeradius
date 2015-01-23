@@ -66,6 +66,9 @@ The maximum number of requests which the server keeps track of. This should be 2
 ##### `max_servers`
 Limit on the total number of servers running. Default: `4096`
 
+##### `manage_logrotate`
+Whether or not to push a custom logrotate.d file. On Ubuntu, you may want to set this to `false`. Default: `true`
+
 ##### `mysql_support`
 Install support for MySQL. Note this only installs the package. Use `freeradius::sql` to configure SQL support. Default: `false`
 
